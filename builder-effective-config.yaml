@@ -1,0 +1,95 @@
+directories:
+  output: out
+  buildResources: build
+appId: com.zdxlz.app
+copyright: 中电信数智科技有限公司安徽分公司
+asar: true
+files:
+  - filter:
+      - '**/*'
+      - '!frontend/'
+      - '!run/'
+      - '!logs/'
+      - '!log/'
+      - '!data/'
+      - '!electron/'
+      - '!doc/'
+      - '!installer.nsh'
+      - '!jsconfig.json'
+      - '!package-lock.json'
+      - '!.*'
+      - '!*.md'
+      - '!*eslint*'
+      - '!*.store'
+      - '!*.yml'
+      - '!*.lock'
+      - '!mainBak.js'
+      - '!tmp.manifest'
+      - '!tmp_out.manifest'
+      - '!process.drawio'
+      - '!LICENSE'
+extraResources:
+  - from: ./build/extraResources/dll/win64/
+    to: extraResources/dll/win64
+    filter:
+      - '**/*'
+      - '!log/'
+      - '!tyMeeting/log/'
+      - '!tyMeeting/cache/'
+      - '!tyMeeting/ctmlingle/cache/'
+      - '!tyMeeting/ctmlingle/log/'
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/
+afterPack: ./build/build-hooks/afterPackHook.js
+npmRebuild: false
+nsis:
+  oneClick: false
+  include: ./installer.nsh
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  installerIcon: ./build/icons/icon.ico
+  uninstallerIcon: ./build/icons/icon.ico
+  installerHeaderIcon: ./build/icons/icon.ico
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  deleteAppDataOnUninstall: true
+  shortcutName: 云总机
+dmg:
+  sign: false
+  contents:
+    - x: 410
+      'y': 150
+      type: link
+      path: /Applications
+    - x: 130
+      'y': 150
+      type: file
+mac:
+  icon: ./build/icons/512.png
+  target: dmg
+  artifactName: ${productName}-macOS-{version}_${arch}.${ext}
+win:
+  icon: ./build/icons/icon.ico
+  artifactName: ${productName}-windows-${version}_${arch}.${ext}
+  target:
+    - target: nsis
+  verifyUpdateCodeSignature: false
+  signingHashAlgorithms:
+    - sha256
+  signDlls: false
+  certificateFile: ./build/cert/zdxlz-cer.pfx
+  certificatePassword: <stripped sensitive data>
+linux:
+  icon: ./build/icons/512.icns
+  artifactName: ${productName}-linux-${version}_${arch}.${ext}
+  target:
+    target: deb
+    arch:
+      - x64
+      - arm64
+      - universal
+publish:
+  - provider: generic
+    url: http://127.0.0.1:5500/
+productName: 无签名云总机
+electronVersion: 22.3.27
